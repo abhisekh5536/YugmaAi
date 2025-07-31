@@ -1,0 +1,5 @@
+@import "tailwindcss";
+#root {
+  overflow-x: hidden;
+  width: 100vw;
+}

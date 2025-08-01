@@ -6,7 +6,7 @@ import { main } from "../../services/aimodel";
 const Builder = () => {
   // State for chat messages
   const [messages, setMessages] = useState([
-    { id: 1, text: "Hello! I'm your AI Agent. Describe the website you want to build.", sender: 'ai' },
+    { id: 1, text: "Jaldi boliye malik kya bnau? kal subh panvel nikalna hai", sender: 'ai' },
 
   ]);
   
@@ -224,7 +224,7 @@ useEffect(() => {
                 <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
               </div>
-              <span className="ml-2 text-gray-300">AI is generating your website...</span>
+              <span className="ml-2 text-gray-300">Rukiye malik kaam chalu h...</span>
             </div>
           )}
         </div>

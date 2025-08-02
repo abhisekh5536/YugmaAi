@@ -19,6 +19,13 @@ const Home = () => {
     navigate('/builder', { state: { prompt } });
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleGenerateApp();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 w-screen">
       <div className="max-w-4xl w-full text-center">
@@ -49,6 +56,7 @@ const Home = () => {
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder="Describe what you want to build..."
               className="w-full bg-transparent text-white placeholder-gray-500 resize-none border-none outline-none text-sm sm:text-base"
               rows={2}

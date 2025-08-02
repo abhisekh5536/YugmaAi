@@ -105,3 +105,23 @@ button:focus-visible {
     line-height: 1.2;
   }
 }
+
+/* logo loader */
+.logo-loader {
+  width: 100px;
+  height: 100px;
+  margin: auto;
+}
+
+.logo-path {
+  animation: drawLogo 2s ease-in-out infinite alternate;
+}
+
+@keyframes drawLogo {
+  0% {
+    stroke-dashoffset: 600;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}

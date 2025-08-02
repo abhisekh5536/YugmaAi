@@ -71,3 +71,37 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  body {
+    min-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Improve text rendering on mobile */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Optimize button touch targets for mobile */
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Extra small devices (phones, 480px and down) */
+@media (max-width: 480px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Improve spacing for very small screens */
+  h1 {
+    line-height: 1.2;
+  }
+}

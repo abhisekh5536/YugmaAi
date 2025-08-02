@@ -252,9 +252,9 @@ useEffect(() => {
 };
 
   return (
-    <div className="flex h-screen bg-gray-900 text-white w-full pt-16">
+    <div className="flex flex-col md:flex-row h-screen bg-gray-900 text-white w-full pt-16">
       {/* Chat Sidebar (25% width) */}
-      <div className="w-1/4 bg-gray-800 flex flex-col border-r border-gray-700">
+      <div className="w-full md:w-1/4 h-[400px] md:h-auto bg-gray-800 flex flex-col border-r border-gray-700">
         <div className="p-4 border-b border-gray-700">
           <h2 className="text-xl font-bold">Yugma Ai</h2>
         </div>
@@ -304,7 +304,7 @@ useEffect(() => {
       </div>
       
       {/* Code Editor Panel (75% width) */}
-      <div className="w-3/4 flex flex-col">
+      <div className="w-full md:w-3/4 md:flex flex-col">
         {/* Simulated VS Code header */}
         <div className="bg-gray-900 px-4 py-2 flex items-center justify-between border-b border-gray-700">
           <div className="flex items-center">
@@ -313,36 +313,57 @@ useEffect(() => {
               <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
             </div>
-            <div className="ml-4 text-sm text-gray-400">
+            <div className="ml-4 text-sm text-gray-400 md:block hidden">
               Builder - AI Website Generator
+            </div>
+            <div className="ml-4 md:hidden">
+              <span className="text-sm">•••</span>
             </div>
           </div>
           <div className="flex space-x-2">
             <button 
-              className="text-sm px-3 py-1 rounded bg-green-600 hover:bg-green-700 transition duration-200 ml-2"
+              className="text-sm px-3 py-1 rounded bg-green-600 hover:bg-green-700 transition duration-200"
               onClick={downloadFilesAsZip}
-              disabled={files.length === 0 || isLoading}>
-              Download as ZIP
-            </button> 
+              disabled={files.length === 0 || isLoading}
+              title="Download as ZIP"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              <span className="md:inline hidden ml-1">Download as ZIP</span>
+            </button>
             <button 
               className={`text-sm px-3 py-1 rounded transition duration-200 ${viewMode === 'code' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-700 hover:bg-gray-600'}`}
               onClick={() => setViewMode('code')}
+              title="Code"
             >
-              Code
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+              </svg>
+              <span className="md:inline hidden ml-1">Code</span>
             </button>
             <button 
               className={`text-sm px-3 py-1 rounded transition duration-200 ${viewMode === 'preview' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-700 hover:bg-gray-600'}`}
               onClick={() => setViewMode('preview')}
+              title="Preview"
             >
-              Preview
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <span className="md:inline hidden ml-1">Preview</span>
             </button>
             <button 
-              className="text-sm px-3 py-1 rounded bg-purple-600 hover:bg-purple-700 transition duration-200 ml-2"
+              className="text-sm px-3 py-1 rounded bg-purple-600 hover:bg-purple-700 transition duration-200"
               onClick={() => setIsFullscreen(!isFullscreen)}
               disabled={files.length === 0 || isLoading}
+              title="Fullscreen"
             >
-              {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen Preview'}
-            </button> 
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+              </svg>
+              <span className="md:inline hidden ml-1">{isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}</span>
+            </button>
           </div>
         </div>
         

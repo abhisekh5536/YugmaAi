@@ -19,6 +19,10 @@ const Builder = () => {
   // Loading state
   const [isLoading, setIsLoading] = useState(false);
 
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+
+
   
 useEffect(() => {
   if (location.state?.prompt && !hasAutoSubmitted.current) {
@@ -99,6 +103,15 @@ useEffect(() => {
     e.preventDefault();
     if (newMessage.trim() === '') return;
     
+    // Gather current files content
+    const currentFiles = {
+      html: getFileContent('index.html'),
+      css: getFileContent('style.css'),
+      js: getFileContent('index.js')
+    };
+
+    const prompt = `This is the user Prompt: ${newMessage}`;
+    const context = `Current HTML:\n${currentFiles.html}\n\nCurrent CSS:\n${currentFiles.css}\n\nCurrent JS:\n${currentFiles.js}`;
     const newMsg = {
       id: messages.length + 1,
       text: newMessage,
@@ -114,7 +127,7 @@ useEffect(() => {
     try {
       // Call AI model with the message
       const prompt = `Create a website for: ${newMessage}`;
-      const response = await main(prompt);
+      const response = await main(prompt, context);
 
       // Ensure response structure matches expected format
       const validatedResponse = {
@@ -198,12 +211,52 @@ useEffect(() => {
   };
   const getLineCount = (content) => content.split('\n').length;
 
+  // download zip files
+  const downloadFilesAsZip = async () => {
+  try {
+    if (files.length === 0) return;
+    
+    const JSZip = (await import('jszip')).default;
+    const zip = new JSZip();
+    
+    // Add files to zip
+    files.forEach(file => {
+      zip.file(file.name, file.content);
+    });
+    
+    // Generate zip file
+    const content = await zip.generateAsync({ type: 'blob' });
+    
+    // Create download link
+    const url = URL.createObjectURL(content);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `YugmaAi-Project.zip`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Clean up
+    setTimeout(() => URL.revokeObjectURL(url), 100);
+  } catch (error) {
+    console.error('Error generating zip:', error);
+    
+    // Add error message to chat
+    const errorMessage = {
+      id: messages.length + 1,
+      text: "Failed to generate download. Please try again.",
+      sender: 'ai'
+    };
+    setMessages(prev => [...prev, errorMessage]);
+  }
+};
+
   return (
     <div className="flex h-screen bg-gray-900 text-white w-full pt-16">
       {/* Chat Sidebar (25% width) */}
       <div className="w-1/4 bg-gray-800 flex flex-col border-r border-gray-700">
         <div className="p-4 border-b border-gray-700">
-          <h2 className="text-xl font-bold">AI Chat</h2>
+          <h2 className="text-xl font-bold">Yugma Ai</h2>
         </div>
         
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -266,6 +319,12 @@ useEffect(() => {
           </div>
           <div className="flex space-x-2">
             <button 
+              className="text-sm px-3 py-1 rounded bg-green-600 hover:bg-green-700 transition duration-200 ml-2"
+              onClick={downloadFilesAsZip}
+              disabled={files.length === 0 || isLoading}>
+              Download as ZIP
+            </button> 
+            <button 
               className={`text-sm px-3 py-1 rounded transition duration-200 ${viewMode === 'code' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-700 hover:bg-gray-600'}`}
               onClick={() => setViewMode('code')}
             >
@@ -277,6 +336,13 @@ useEffect(() => {
             >
               Preview
             </button>
+            <button 
+              className="text-sm px-3 py-1 rounded bg-purple-600 hover:bg-purple-700 transition duration-200 ml-2"
+              onClick={() => setIsFullscreen(!isFullscreen)}
+              disabled={files.length === 0 || isLoading}
+            >
+              {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen Preview'}
+            </button> 
           </div>
         </div>
         
@@ -346,15 +412,25 @@ useEffect(() => {
           </div>
         ) : (
           // Preview Area
-          <div className="flex-1 overflow-hidden bg-white p-4">
-            <div className="h-full border border-gray-300 rounded overflow-auto">
+          <div className={`${isFullscreen ? 'fixed inset-0 z-50 bg-white p-0' : 'flex-1 overflow-hidden bg-white p-4'}`}>
+            <div className={`${isFullscreen ? 'h-full w-full' : 'h-full border border-gray-300 rounded overflow-auto'}`}>
               {files.length > 0 ? (
-                <iframe 
-                  title="preview"
-                  srcDoc={getPreviewContent()}
-                  className="w-full h-full"
-                  sandbox="allow-scripts"
-                />
+                <>
+                  {isFullscreen && (
+                    <button
+                      onClick={() => setIsFullscreen(false)}
+                      className="fixed top-4 right-4 z-50 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-red-700 transition duration-200"
+                    >
+                      Exit Fullscreen
+                    </button>
+                  )}
+                  <iframe
+                    title="preview"
+                    srcDoc={getPreviewContent()}
+                    className="w-full h-full"
+                    sandbox="allow-scripts allow-same-origin"
+                  />
+                </>
               ) : (
                 <div className="flex items-center justify-center h-full text-gray-500">
                   <div className="text-center">

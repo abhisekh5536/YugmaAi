@@ -26,7 +26,7 @@ const Navbar = () => {
       <div className={containerClasses}>
         <div className={innerContainerClasses}>
           <div className="flex items-center px-6 select-none ">
-            <img src="/public/Yugma_Logo.png" alt="Yugma Ai Logo" className="h-8 w-8" draggable="false"/>
+            <img src="/Yugma_Logo.png" alt="Yugma Ai Logo" className="h-8 w-8" draggable="false"/>
             <span className="text-white text-2xl font-bold">Yugma Ai</span>
           </div>
 

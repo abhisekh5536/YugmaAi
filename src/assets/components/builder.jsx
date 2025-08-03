@@ -369,7 +369,7 @@ useEffect(() => {
         
         {/* Conditional rendering based on view mode */}
         {viewMode === 'code' ? (
-          <div className="flex flex-1 overflow-hidden">
+          <div className="flex flex-1 overflow-hidden h-[calc(100vh-450px)]">
             {/* File Explorer */}
             <div className="w-48 bg-gray-800 border-r border-gray-700 overflow-y-auto">
               <div className="p-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Explorer</div>

@@ -31,7 +31,7 @@ const Home = () => {
       <div className="max-w-4xl w-full text-center">
         {/* Header */}
         <div className="mb-8 sm:mb-10 md:mb-12">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-4 mt-12 sm:mt-16 md:mt-20">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-4 mt-20">
             Btao Maalik kya bnau?
           </h1>
           

@@ -7,6 +7,9 @@ import {
 } from '@google/genai';
 
 async function main(prompt, context) {
+
+  console.log('Yugma builder with Gemini 2.5 Flash is running')
+
   const ai = new GoogleGenAI({
     apiKey: import.meta.env.VITE_GEMINI_API_KEY,
   });
@@ -64,10 +67,9 @@ A <nav> tag with at least 3 links
 
 A <footer> with 3 links
 
-Logos and icons (can use text or placeholder)
+Logos and icons
 
-Realistic placeholder images using https://picsum.photos, for example:
-<img src=\"https://picsum.photos/600/400?random=1\" alt=\"...\">
+
 
 Final Warning:
 Never use backticks (\`) or code blocks. Output the JSON only, properly escaped, and unwrapped.`,

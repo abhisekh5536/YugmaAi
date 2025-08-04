@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { main } from "../../services/aimodel";
+import { main as mainGemini } from "../../services/aimodel_gemini";
+import { main as mainGpt } from "../../services/aimodel_GPT";
 
 
 const Builder = () => {
@@ -20,6 +21,8 @@ const Builder = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const [selectedModel, setSelectedModel] = useState('mainGemini');
 
 
 
@@ -49,7 +52,8 @@ useEffect(() => {
     
     try {
       // Call AI model with the message
-      const response = await main(promptText);
+      const modelFunction = selectedModel === 'mainGemini' ? mainGemini : mainGpt;
+      const response = await modelFunction(promptText);
       
       
       // Ensure response structure matches expected format
@@ -127,7 +131,8 @@ useEffect(() => {
     try {
       // Call AI model with the message
       const prompt = `Create a website for: ${newMessage}`;
-      const response = await main(prompt, context);
+      const modelFunction = selectedModel === 'mainGemini' ? mainGemini : mainGpt;
+      const response = await modelFunction(prompt, context);
 
       // Ensure response structure matches expected format
       const validatedResponse = {
@@ -255,8 +260,17 @@ useEffect(() => {
     <div className="flex flex-col md:flex-row h-screen bg-gray-900 text-white w-full pt-16">
       {/* Chat Sidebar (25% width) */}
       <div className="w-full md:w-1/4 h-[400px] md:h-auto bg-gray-800 flex flex-col border-r border-gray-700">
-        <div className="p-4 border-b border-gray-700">
-          <h2 className="text-xl font-bold">Yugma Chat</h2>
+        <div className="p-4 border-b border-gray-700 flex justify-between items-center">
+  <h2 className="text-xl font-bold">Yugma Chat</h2>
+  {/* model select */}
+          <select 
+            value={selectedModel}
+            onChange={(e) => setSelectedModel(e.target.value)}
+            className="bg-gray-700 text-white rounded px-3 py-1 text-sm"
+          >
+            <option value="mainGemini">Gemini 2.5 Flash</option>
+            <option value="mainGpt">GPT 4.1</option>
+          </select>
         </div>
         
         <div className="flex-1 overflow-y-auto p-4 space-y-4">

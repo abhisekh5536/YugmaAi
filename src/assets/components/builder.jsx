@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { main as mainGemini } from "../../services/aimodel_gemini";
 import { main as mainGpt } from "../../services/aimodel_GPT";
+import { main as mainHorizon } from "../../services/aimodel_openRouter";
+import { main as mainLangchain } from "../../services/aimodel_langchain";
+
 
 
 const Builder = () => {
@@ -52,7 +55,10 @@ useEffect(() => {
     
     try {
       // Call AI model with the message
-      const modelFunction = selectedModel === 'mainGemini' ? mainGemini : mainGpt;
+      const modelFunction = selectedModel === 'mainGemini' ? mainGemini : selectedModel === 'mainGpt' ? mainGpt : selectedModel === 'mainHorizon' ? mainHorizon : selectedModel === 'mainLangchain' ? mainLangchain : mainGemini;
+
+
+
       const response = await modelFunction(promptText);
       
       
@@ -131,7 +137,8 @@ useEffect(() => {
     try {
       // Call AI model with the message
       const prompt = `Create a website for: ${newMessage}`;
-      const modelFunction = selectedModel === 'mainGemini' ? mainGemini : mainGpt;
+      const modelFunction = selectedModel === 'mainGemini' ? mainGemini : selectedModel === 'mainGpt' ? mainGpt : selectedModel === 'mainHorizon' ? mainHorizon : selectedModel === 'mainLangchain' ? mainLangchain : mainGemini;
+
       const response = await modelFunction(prompt, context);
 
       // Ensure response structure matches expected format
@@ -270,6 +277,9 @@ useEffect(() => {
           >
             <option value="mainGemini">Gemini 2.5 Flash</option>
             <option value="mainGpt">GPT 4.1</option>
+            <option value="mainHorizon">Horizon</option>
+            <option value="mainLangchain">GPT 4.1 NANO</option>
+
           </select>
         </div>
         

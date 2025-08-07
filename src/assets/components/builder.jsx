@@ -57,10 +57,7 @@ useEffect(() => {
       // Call AI model with the message
       const modelFunction = selectedModel === 'mainGemini' ? mainGemini : selectedModel === 'mainGpt' ? mainGpt : selectedModel === 'mainHorizon' ? mainHorizon : selectedModel === 'mainLangchain' ? mainLangchain : mainGemini;
 
-
-
       const response = await modelFunction(promptText);
-      
       
       // Ensure response structure matches expected format
       const validatedResponse = {
@@ -70,24 +67,36 @@ useEffect(() => {
           summary: response?.summary || ''
       };
 
-      setFiles([
-          { id: 1, name: 'index.html', content: validatedResponse.html },
-          { id: 2, name: 'style.css', content: validatedResponse.css },
-          { id: 3, name: 'index.js', content: validatedResponse.js }
-      ]);
+      // Only update files if we have some valid content
+      const hasAnyContent =
+        (validatedResponse.html && validatedResponse.html.trim().length > 0) ||
+        (validatedResponse.css && validatedResponse.css.trim().length > 0) ||
+        (validatedResponse.js && validatedResponse.js.trim().length > 0);
+
+      if (hasAnyContent) {
+        setFiles([
+            { id: 1, name: 'index.html', content: validatedResponse.html },
+            { id: 2, name: 'style.css', content: validatedResponse.css },
+            { id: 3, name: 'index.js', content: validatedResponse.js }
+        ]);
+      }
       
-      // Add AI response to chat
+      // Add AI response to chat (fallback message if empty)
+      const aiSummary = validatedResponse.summary && validatedResponse.summary.trim().length > 0
+        ? validatedResponse.summary
+        : 'Generated content available.';
+
       const aiResponse = {
         id: messages.length + 2,
-        text: validatedResponse.summary,
+        text: aiSummary,
         sender: 'ai'
       };
       setMessages(prev => [...prev, aiResponse]);
     } catch (error) {
-      // Handle error case
+      // Handle error case: keep previous files unchanged
       const errorMessage = {
         id: messages.length + 2,
-        text: "Sorry, I encountered an error. Please try again.",
+        text: "Sorry, I encountered an error. Previous files are unchanged. Please try again.",
         sender: 'ai'
       };
       setMessages(prev => [...prev, errorMessage]);
@@ -149,24 +158,36 @@ useEffect(() => {
           summary: response?.summary || ''
       };
 
-      setFiles([
-          { id: 1, name: 'index.html', content: validatedResponse.html },
-          { id: 2, name: 'style.css', content: validatedResponse.css },
-          { id: 3, name: 'index.js', content: validatedResponse.js }
-      ]);
+      // Only update files if we have some valid content
+      const hasAnyContent =
+        (validatedResponse.html && validatedResponse.html.trim().length > 0) ||
+        (validatedResponse.css && validatedResponse.css.trim().length > 0) ||
+        (validatedResponse.js && validatedResponse.js.trim().length > 0);
+
+      if (hasAnyContent) {
+        setFiles([
+            { id: 1, name: 'index.html', content: validatedResponse.html },
+            { id: 2, name: 'style.css', content: validatedResponse.css },
+            { id: 3, name: 'index.js', content: validatedResponse.js }
+        ]);
+      }
       
-      // Add AI response to chat
+      // Add AI response to chat (fallback message if empty)
+      const aiSummary = validatedResponse.summary && validatedResponse.summary.trim().length > 0
+        ? validatedResponse.summary
+        : (hasAnyContent ? 'Generated content available.' : 'No new content was generated.');
+
       const aiResponse = {
         id: messages.length + 2,
-        text: validatedResponse.summary,
+        text: aiSummary,
         sender: 'ai'
       };
       setMessages(prev => [...prev, aiResponse]);
     } catch (error) {
-      // Handle error case
+      // Handle error case: keep previous files unchanged
       const errorMessage = {
         id: messages.length + 2,
-        text: "Sorry, I encountered an error. Please try again.",
+        text: "Sorry, I encountered an error. Previous files are unchanged. Please try again.",
         sender: 'ai'
       };
       setMessages(prev => [...prev, errorMessage]);

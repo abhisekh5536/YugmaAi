@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { main } from '../../services/enhance';
+
 
 const Home = () => {
   const [prompt, setPrompt] = useState('');
+  const [isEnhancing, setIsEnhancing] = useState(false);
 
   const examplePrompts = [
     'Create a financial dashboard',
@@ -18,6 +21,13 @@ const Home = () => {
   const handleGenerateApp = () => {
     navigate('/builder', { state: { prompt } });
   };
+  const handleEnhancePrompt = async () => {
+    if (isEnhancing) return;
+    setIsEnhancing(true);
+    const enhancedPrompt = await main(prompt);
+    setPrompt(enhancedPrompt);
+    setIsEnhancing(false);
+  }
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -31,7 +41,7 @@ const Home = () => {
       <div className="max-w-4xl w-full text-center">
         {/* Header */}
         <div className="mb-8 sm:mb-10 md:mb-12">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-4 mt-20">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-4 mt-25">
             Btao Maalik kya bnau?
           </h1>
           
@@ -52,23 +62,50 @@ const Home = () => {
           </div>
           
           <div className="bg-gray-900/80 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6 text-left font-mono text-sm min-h-[100px] sm:min-h-[120px] md:min-h-[140px] flex items-center">
-            <span className="text-purple-400 mr-1 sm:mr-2 text-sm">$</span>
+            <span className="text-purple-400 mr-1 sm:mr-2 text-sm ">$</span>
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Describe what you want to build..."
               className="w-full bg-transparent text-white placeholder-gray-500 resize-none border-none outline-none text-sm sm:text-base"
-              rows={2}
+              rows={6}
             />
           </div>
           
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-            <button className="flex items-center gap-1 sm:gap-2 text-gray-400 hover:text-blue-400 transition-colors duration-200 text-sm sm:text-base">
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            <button 
+              className={`flex items-center gap-1 sm:gap-2 text-gray-400 hover:text-blue-400 transition-colors duration-200 text-sm sm:text-base ${isEnhancing ? 'cursor-not-allowed' : ''}`}
+              onClick={handleEnhancePrompt}
+              disabled={isEnhancing}
+            >
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                x="0px" y="0px" 
+                width="20" height="20" 
+                viewBox="0 0 48 48" 
+                className={isEnhancing ? 'animate-bounce' : ''} // Simple bounce animation
+              >
+                <radialGradient id="oDvWy9qKGfkbPZViUk7TCa_eoxMN35Z6JKg_gr1" cx="-670.437" cy="617.13" r=".041" gradientTransform="matrix(128.602 652.9562 653.274 -128.6646 -316906.281 517189.719)" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stopColor="#1ba1e3"></stop>
+                  <stop offset="0" stopColor="#1ba1e3"></stop>
+                  <stop offset=".3" stopColor="#5489d6"></stop>
+                  <stop offset=".545" stopColor="#9b72cb"></stop>
+                  <stop offset=".825" stopColor="#d96570"></stop>
+                  <stop offset="1" stopColor="#f49c46"></stop>
+                </radialGradient>
+                <path fill="url(#oDvWy9qKGfkbPZViUk7TCa_eoxMN35Z6JKg_gr1)" d="M22.882,31.557l-1.757,4.024c-0.675,1.547-2.816,1.547-3.491,0l-1.757-4.024	c-1.564-3.581-4.378-6.432-7.888-7.99l-4.836-2.147c-1.538-0.682-1.538-2.919,0-3.602l4.685-2.08	c3.601-1.598,6.465-4.554,8.002-8.258l1.78-4.288c0.66-1.591,2.859-1.591,3.52,0l1.78,4.288c1.537,3.703,4.402,6.659,8.002,8.258	l4.685,2.08c1.538,0.682,1.538,2.919,0,3.602l-4.836,2.147C27.26,25.126,24.446,27.976,22.882,31.557z"></path>
+                <radialGradient id="oDvWy9qKGfkbPZViUk7TCb_eoxMN35Z6JKg_gr2" cx="-670.437" cy="617.13" r=".041" gradientTransform="matrix(128.602 652.9562 653.274 -128.6646 -316906.281 517189.719)" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stopColor="#1ba1e3"></stop>
+                  <stop offset="0" stopColor="#1ba1e3"></stop>
+                  <stop offset=".3" stopColor="#5489d6"></stop>
+                  <stop offset=".545" stopColor="#9b72cb"></stop>
+                  <stop offset=".825" stopColor="#d96570"></stop>
+                  <stop offset="1" stopColor="#f49c46"></stop>
+                </radialGradient>
+                <path fill="url(#oDvWy9qKGfkbPZViUk7TCb_eoxMN35Z6JKg_gr2)" d="M39.21,44.246l-0.494,1.132	c-0.362,0.829-1.51,0.829-1.871,0l-0.494-1.132c-0.881-2.019-2.467-3.627-4.447-4.506l-1.522-0.676	c-0.823-0.366-0.823-1.562,0-1.928l1.437-0.639c2.03-0.902,3.645-2.569,4.511-4.657l0.507-1.224c0.354-0.853,1.533-0.853,1.886,0	l0.507,1.224c0.866,2.088,2.481,3.755,4.511,4.657l1.437,0.639c0.823,0.366,0.823,1.562,0,1.928l-1.522,0.676	C41.677,40.619,40.091,42.227,39.21,44.246z"></path>
               </svg>
-              Enhance with AI
+              {isEnhancing ? 'Enhancing...' : 'Enhance with AI'}
             </button>
             
             <div className="flex items-center gap-2 sm:gap-3">

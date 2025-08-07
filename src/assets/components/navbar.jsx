@@ -34,7 +34,7 @@ const Navbar = () => {
             <div className="hidden sm:block sm:ml-6">
               <div className="flex space-x-4">
                 <a href="/" className={linkClasses}>Home</a>
-                <a href="#" className={linkClasses}>About</a>
+                <a href="/about" className={linkClasses}>About</a>
                 <a href="#" className={linkClasses}>Services</a>
                 <a href="#" className={linkClasses}>Contact</a>
               </div>

@@ -2,16 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { main as mainGemini } from "../../services/aimodel_gemini";
 import { main as mainGpt } from "../../services/aimodel_GPT";
-import { main as mainHorizon } from "../../services/aimodel_openRouter";
+import { main as mainDeepseek } from "../../services/aimodel_openRouter";
+import { main as mainMistral } from "../../services/aimodel_mistral";
 import { main as mainLangchain } from "../../services/aimodel_langchain";
-
-
+import { main as nameGenerator } from "../../services/genName";
+import sendGeneration from '../../services/sendGeneration';
 
 const Builder = () => {
   // State for chat messages
   const [messages, setMessages] = useState([
     { id: 1, text: "Jaldi boliye malik kya bnau? kal subh panvel nikalna hai", sender: 'ai' },
-
   ]);
   
   // State for new message input
@@ -22,24 +22,47 @@ const Builder = () => {
   
   // Loading state
   const [isLoading, setIsLoading] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const [selectedModel, setSelectedModel] = useState('mainGemini');
+  const [projectName, setProjectName] = useState('');
+  const hasProjectNameGenerated = useRef(false);
+  const projectNameRef = useRef('');
 
+  useEffect(() => {
+    if (location.state?.prompt && !hasAutoSubmitted.current) {
+      setNewMessage(location.state.prompt);
 
+      // checking if the prompt is from dashboard
+      if(location.state.fromDashboard) {
+        setFiles(location.state.files || []);
+        // set the user prompt
+        const userMessage = {
+        id: messages.length + 1,
+        text: location.state.prompt,
+        sender: 'user'
+      };
+      setMessages(prev => [...prev, userMessage]);
+      // set summary
+      const aiResponse = {
+          id: messages.length + 2,
+          text: location.state.summary,
+          sender: 'ai'
+        };
+        setMessages(prev => [...prev, aiResponse]);
+      }
+      else {
+        handleAutoSubmit(location.state.prompt);
+      }
 
-  
-useEffect(() => {
-  if (location.state?.prompt && !hasAutoSubmitted.current) {
-    setNewMessage(location.state.prompt);
-    handleAutoSubmit(location.state.prompt);
-    hasAutoSubmitted.current = true;
-  }
-}, [location.state]);
+      hasAutoSubmitted.current = true;
+    }
+  }, [location.state]);
 
   const handleAutoSubmit = async (promptText) => {
-    
+    if (location.state?.fromDashboard) return;
     setNewMessage('');
 
     // Add user message to chat
@@ -54,9 +77,16 @@ useEffect(() => {
     setIsLoading(true);
     
     try {
+      // Generate project name only once for the first prompt
+      if (!hasProjectNameGenerated.current) {
+        const generatedName = await nameGenerator(promptText);
+        projectNameRef.current = generatedName || 'Project';
+        setProjectName(projectNameRef.current);
+        hasProjectNameGenerated.current = true;
+      }
+      
       // Call AI model with the message
-      const modelFunction = selectedModel === 'mainGemini' ? mainGemini : selectedModel === 'mainGpt' ? mainGpt : selectedModel === 'mainHorizon' ? mainHorizon : selectedModel === 'mainLangchain' ? mainLangchain : mainGemini;
-
+      const modelFunction = selectedModel === 'mainGemini' ? mainGemini : selectedModel === 'mainGpt' ? mainGpt : selectedModel === 'mainDeepseek' ? mainDeepseek : selectedModel === 'mainLangchain' ? mainLangchain : selectedModel === 'mainMistral' ? mainMistral : mainGemini;
       const response = await modelFunction(promptText);
       
       // Ensure response structure matches expected format
@@ -119,83 +149,106 @@ useEffect(() => {
   
   // Handle sending a new message
   const handleSendMessage = async (e) => {
-    e.preventDefault();
-    if (newMessage.trim() === '') return;
-    
-    // Gather current files content
-    const currentFiles = {
-      html: getFileContent('index.html'),
-      css: getFileContent('style.css'),
-      js: getFileContent('index.js')
-    };
-
-    const prompt = `This is the user Prompt: ${newMessage}`;
-    const context = `Current HTML:\n${currentFiles.html}\n\nCurrent CSS:\n${currentFiles.css}\n\nCurrent JS:\n${currentFiles.js}`;
-    const newMsg = {
-      id: messages.length + 1,
-      text: newMessage,
-      sender: 'user'
-    };
-    
-    setMessages([...messages, newMsg]);
-    setNewMessage('');
-    
-    // Set loading state
-    setIsLoading(true);
-    
-    try {
-      // Call AI model with the message
-      const prompt = `Create a website for: ${newMessage}`;
-      const modelFunction = selectedModel === 'mainGemini' ? mainGemini : selectedModel === 'mainGpt' ? mainGpt : selectedModel === 'mainHorizon' ? mainHorizon : selectedModel === 'mainLangchain' ? mainLangchain : mainGemini;
-
-      const response = await modelFunction(prompt, context);
-
-      // Ensure response structure matches expected format
-      const validatedResponse = {
-          html: response?.html || '',
-          css: response?.css || '',
-          js: response?.js || '',
-          summary: response?.summary || ''
-      };
-
-      // Only update files if we have some valid content
-      const hasAnyContent =
-        (validatedResponse.html && validatedResponse.html.trim().length > 0) ||
-        (validatedResponse.css && validatedResponse.css.trim().length > 0) ||
-        (validatedResponse.js && validatedResponse.js.trim().length > 0);
-
-      if (hasAnyContent) {
-        setFiles([
-            { id: 1, name: 'index.html', content: validatedResponse.html },
-            { id: 2, name: 'style.css', content: validatedResponse.css },
-            { id: 3, name: 'index.js', content: validatedResponse.js }
-        ]);
-      }
-      
-      // Add AI response to chat (fallback message if empty)
-      const aiSummary = validatedResponse.summary && validatedResponse.summary.trim().length > 0
-        ? validatedResponse.summary
-        : (hasAnyContent ? 'Generated content available.' : 'No new content was generated.');
-
-      const aiResponse = {
-        id: messages.length + 2,
-        text: aiSummary,
-        sender: 'ai'
-      };
-      setMessages(prev => [...prev, aiResponse]);
-    } catch (error) {
-      // Handle error case: keep previous files unchanged
-      const errorMessage = {
-        id: messages.length + 2,
-        text: "Sorry, I encountered an error. Previous files are unchanged. Please try again.",
-        sender: 'ai'
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      // Reset loading state
-      setIsLoading(false);
-    }
+  e.preventDefault();
+  if (newMessage.trim() === '') return;
+  
+  // Gather current files content
+  const currentFiles = {
+    html: getFileContent('index.html'),
+    css: getFileContent('style.css'),
+    js: getFileContent('index.js')
   };
+
+  const userMsg = {
+    id: messages.length + 1,
+    text: newMessage,
+    sender: 'user'
+  };
+  
+  setMessages(prev => [...prev, userMsg]);
+  setNewMessage('');
+  
+  // Set loading state
+  setIsLoading(true);
+  
+  try {
+    // Check if we have existing files (from dashboard or previous generation)
+    const hasExistingCode = currentFiles.html || currentFiles.css || currentFiles.js;
+    
+    let prompt;
+    if (hasExistingCode) {
+      // If we have existing code, ask to modify it
+      prompt = `Please modify the existing website based on this request: ${newMessage}
+      
+Current HTML:
+${currentFiles.html}
+
+Current CSS:
+${currentFiles.css}
+
+Current JavaScript:
+${currentFiles.js}
+
+Please update the code according to the user's request while maintaining the existing structure where appropriate.`;
+    } else {
+      // If no existing code, create new website
+      prompt = `Create a website for: ${newMessage}`;
+    }
+
+    const modelFunction = selectedModel === 'mainGemini' ? mainGemini : 
+                         selectedModel === 'mainGpt' ? mainGpt : 
+                         selectedModel === 'mainDeepseek' ? mainDeepseek : 
+                         selectedModel === 'mainLangchain' ? mainLangchain : 
+                         selectedModel === 'mainMistral' ? mainMistral : mainGemini;
+
+    const response = await modelFunction(prompt, hasExistingCode ? currentFiles : undefined);
+
+    // Ensure response structure matches expected format
+    const validatedResponse = {
+        html: response?.html || '',
+        css: response?.css || '',
+        js: response?.js || '',
+        summary: response?.summary || ''
+    };
+
+    // Only update files if we have some valid content
+    const hasAnyContent =
+      (validatedResponse.html && validatedResponse.html.trim().length > 0) ||
+      (validatedResponse.css && validatedResponse.css.trim().length > 0) ||
+      (validatedResponse.js && validatedResponse.js.trim().length > 0);
+
+    if (hasAnyContent) {
+      setFiles([
+          { id: 1, name: 'index.html', content: validatedResponse.html },
+          { id: 2, name: 'style.css', content: validatedResponse.css },
+          { id: 3, name: 'index.js', content: validatedResponse.js }
+      ]);
+    }
+    
+    // Add AI response to chat (fallback message if empty)
+    const aiSummary = validatedResponse.summary && validatedResponse.summary.trim().length > 0
+      ? validatedResponse.summary
+      : (hasAnyContent ? 'Generated content available.' : 'No new content was generated.');
+
+    const aiResponse = {
+      id: messages.length + 2,
+      text: aiSummary,
+      sender: 'ai'
+    };
+    setMessages(prev => [...prev, aiResponse]);
+  } catch (error) {
+    // Handle error case: keep previous files unchanged
+    const errorMessage = {
+      id: messages.length + 2,
+      text: "Sorry, I encountered an error. Previous files are unchanged. Please try again.",
+      sender: 'ai'
+    };
+    setMessages(prev => [...prev, errorMessage]);
+  } finally {
+    // Reset loading state
+    setIsLoading(false);
+  }
+};
   
   // Handle file content change
   const handleFileContentChange = (e) => {
@@ -284,6 +337,53 @@ useEffect(() => {
   }
 };
 
+const handleSync = async () => {
+  setIsSyncing(true);
+  try {
+    // Get the summary from the last AI message or create one
+    const lastAiMessage = messages.filter(msg => msg.sender === 'ai').pop();
+    const summary = lastAiMessage ? lastAiMessage.text : 'No summary available';
+    
+    // Get project name or create default
+    const projectNameToSave = projectNameRef.current || 'Untitled Project';
+    
+    // Get the original prompt from the first user message
+    const firstUserMessage = messages.find(msg => msg.sender === 'user');
+    const originalPrompt = firstUserMessage ? firstUserMessage.text : newMessage;
+
+    await sendGeneration(
+      getFileContent('index.html'), 
+      getFileContent('style.css'), 
+      getFileContent('index.js'), 
+      summary,  // Use the summary from chat
+      projectNameToSave,  // Use the generated project name
+      originalPrompt  // Use the original prompt
+    );
+
+    console.log('Project synced successfully!');
+    
+    // Optional: Add success message to chat
+    const successMessage = {
+      id: messages.length + 1,
+      text: "Project synced successfully!",
+      sender: 'ai'
+    };
+    setMessages(prev => [...prev, successMessage]);
+  } catch (error) {
+    console.error('Sync failed:', error);
+    
+    // Add error message to chat
+    const errorMessage = {
+      id: messages.length + 1,
+      text: "Failed to sync project. Please try again.",
+      sender: 'ai'
+    };
+    setMessages(prev => [...prev, errorMessage]);
+  } finally {
+    setIsSyncing(false);
+  }
+};
+
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-900 text-white w-full pt-16">
       {/* Chat Sidebar (25% width) */}
@@ -298,9 +398,9 @@ useEffect(() => {
           >
             <option value="mainGemini">Gemini 2.5 Flash</option>
             <option value="mainGpt">GPT 4.1</option>
-            <option value="mainHorizon">Horizon</option>
+            <option value="mainDeepseek">Deepseek R1-Chimera</option>
             <option value="mainLangchain">GPT 4.1 NANO</option>
-
+            <option value="mainMistral">Codestral 2501</option>
           </select>
         </div>
         
@@ -359,7 +459,7 @@ useEffect(() => {
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
             </div>
             <div className="ml-4 text-sm text-gray-400 md:block hidden">
-              Builder - AI Website Generator
+              Builder - {(projectNameRef.current?.length > 0) ? projectNameRef.current : 'Ai Website Builder'}
             </div>
             <div className="ml-4 md:hidden">
               <span className="text-sm">•••</span>
@@ -377,6 +477,20 @@ useEffect(() => {
               </svg>
               <span className="md:inline hidden ml-1">Download as ZIP</span>
             </button>
+            
+            <button
+  className="text-sm px-3 py-1 rounded bg-purple-600 hover:bg-purple-700 transition duration-200 flex items-center"
+  onClick={handleSync}
+  disabled={files.length === 0 || isLoading || isSyncing}
+  title="Save Project"
+>
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+  </svg>
+  <span className="md:inline hidden ml-1">
+    {isSyncing ? 'Syncing...' : 'Sync'}
+  </span>
+</button>
             <button 
               className={`text-sm px-3 py-1 rounded transition duration-200 ${viewMode === 'code' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-700 hover:bg-gray-600'}`}
               onClick={() => setViewMode('code')}
@@ -491,7 +605,6 @@ useEffect(() => {
         ) : (
           // Preview Area
           <div className={`${isFullscreen ? 'fixed inset-0 z-50 bg-white p-0' : 'flex-1 overflow-hidden bg-white p-4'}`}>
-            isloading
             <div className={`${isFullscreen ? 'h-full w-full' : 'h-full border border-gray-300 rounded overflow-auto'}`}>
               {files.length > 0 ? (
                 <>
@@ -503,7 +616,6 @@ useEffect(() => {
                       Exit Fullscreen
                     </button>
                   )}
-                  isloading
                   <iframe
                     title="preview"
                     srcDoc={getPreviewContent()}

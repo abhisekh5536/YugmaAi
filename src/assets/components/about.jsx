@@ -31,6 +31,8 @@ function About() {
                     <li>Real-time preview with isolated sandbox</li>
                     <li>Editable code with instant feedback</li>
                     <li>One-click ZIP export of generated files</li>
+                    <li>Secure user authentication system</li>
+                    <li>Cloud storage for all your projects</li>
                   </ul>
                 </div>
                 <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4">
@@ -40,6 +42,8 @@ function About() {
                     <li>Clean, accessible, and semantic structure</li>
                     <li>Modern visuals consistent with site theme</li>
                     <li>Performance and clarity in code</li>
+                    <li>Secure data handling and storage</li>
+                    <li>Scalable architecture for future growth</li>
                   </ul>
                 </div>
               </div>
@@ -53,7 +57,7 @@ function About() {
               <h3 className="text-xl font-semibold mt-4">Developer</h3>
               <p className="text-gray-300">Abhisekh Yadav</p>
               <p className="text-gray-400 mt-2 text-sm">
-                Frontend-focused developer who enjoys crafting delightful user experiences.
+                Full-stack developer passionate about creating seamless user experiences with robust backend systems.
               </p>
               <div className="mt-4 flex flex-wrap items-center gap-2">
                 <a
@@ -97,7 +101,7 @@ function About() {
         {/* Architecture & Stack */}
         <section className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-5 sm:p-8">
-            <h3 className="text-xl sm:text-2xl font-semibold">Architecture</h3>
+            <h3 className="text-xl sm:text-2xl font-semibold">Frontend Architecture</h3>
             <p className="text-gray-400 mt-2 text-sm sm:text-base">
               The app is built with React and Vite. It integrates multiple AI providers to generate structured JSON containing HTML, CSS, and JavaScript. The Builder page renders and previews code in an isolated iframe sandbox for safety and fidelity.
             </p>
@@ -106,30 +110,91 @@ function About() {
               <li>Tailwind CSS for consistent styles and fast iteration</li>
               <li>Multiple AI backends: Gemini, GPT, and more</li>
               <li>ZIP export to download generated code</li>
+              <li>React Router for seamless navigation</li>
+              <li>Responsive design for all device sizes</li>
             </ul>
           </div>
 
           <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-5 sm:p-8">
-            <h3 className="text-xl sm:text-2xl font-semibold">Tech Stack</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-3">
-              <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 text-center">
-                <p className="text-gray-300 text-sm">React</p>
-              </div>
-              <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 text-center">
-                <p className="text-gray-300 text-sm">Vite</p>
-              </div>
-              <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 text-center">
-                <p className="text-gray-300 text-sm">Tailwind CSS</p>
-              </div>
-              <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 text-center">
-                <p className="text-gray-300 text-sm">OpenAI / Gemini</p>
-              </div>
-              <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 text-center">
-                <p className="text-gray-300 text-sm">Langchain-LLM7</p>
-              </div>
-              <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 text-center">
-                <p className="text-gray-300 text-sm">JSZip</p>
-              </div>
+            <h3 className="text-xl sm:text-2xl font-semibold">Backend Architecture</h3>
+            <p className="text-gray-400 mt-2 text-sm sm:text-base">
+              The backend is built with Node.js and Express.js, providing a robust API for user authentication, project storage, and AI integration. MongoDB serves as the database for storing user data and projects securely.
+            </p>
+            <ul className="text-gray-400 mt-4 text-sm list-disc list-inside space-y-1">
+              <li>Node.js runtime environment</li>
+              <li>Express.js framework for API routes</li>
+              <li>MongoDB with Mongoose for data persistence</li>
+              <li>JWT for secure authentication</li>
+              <li>RESTful API design principles</li>
+              <li>Secure password hashing with bcrypt</li>
+            </ul>
+          </div>
+        </section>
+
+        {/* Tech Stack */}
+        <section className="mt-10 bg-gray-800/50 border border-gray-700 rounded-2xl p-5 sm:p-8">
+          <h3 className="text-xl sm:text-2xl font-semibold mb-4">Full Tech Stack</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {/* Frontend Technologies */}
+            <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 text-center">
+              <p className="text-gray-300 text-sm">React</p>
+            </div>
+            <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 text-center">
+              <p className="text-gray-300 text-sm">Vite</p>
+            </div>
+            <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 text-center">
+              <p className="text-gray-300 text-sm">Tailwind CSS</p>
+            </div>
+            <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 text-center">
+              <p className="text-gray-300 text-sm">OpenAI / Gemini</p>
+            </div>
+            <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 text-center">
+              <p className="text-gray-300 text-sm">Langchain-LLM</p>
+            </div>
+            <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 text-center">
+              <p className="text-gray-300 text-sm">JSZip</p>
+            </div>
+            
+            {/* Backend Technologies */}
+            <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 text-center">
+              <p className="text-gray-300 text-sm">Node.js</p>
+            </div>
+            <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 text-center">
+              <p className="text-gray-300 text-sm">Express.js</p>
+            </div>
+            <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 text-center">
+              <p className="text-gray-300 text-sm">MongoDB</p>
+            </div>
+            <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 text-center">
+              <p className="text-gray-300 text-sm">JWT</p>
+            </div>
+            <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 text-center">
+              <p className="text-gray-300 text-sm">Mongoose</p>
+            </div>
+            <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4 text-center">
+              <p className="text-gray-300 text-sm">Bcrypt</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Data Storage */}
+        <section className="mt-10 bg-gray-800/50 border border-gray-700 rounded-2xl p-5 sm:p-8">
+          <h3 className="text-xl sm:text-2xl font-semibold mb-4">Project Storage System</h3>
+          <p className="text-gray-400 text-sm sm:text-base mb-4">
+            Yugma.Ai securely stores all your generated projects in the cloud, allowing you to access them from anywhere. Each project includes the complete code (HTML, CSS, JS) along with metadata like creation date and modification history.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4">
+              <p className="text-gray-300 font-semibold">Secure Storage</p>
+              <p className="text-gray-400 text-sm mt-1">Projects are stored with encryption and only accessible to authenticated users.</p>
+            </div>
+            <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4">
+              <p className="text-gray-300 font-semibold">Version Control</p>
+              <p className="text-gray-400 text-sm mt-1">Track changes and revert to previous versions of your projects.</p>
+            </div>
+            <div className="bg-gray-900/60 border border-gray-700 rounded-xl p-4">
+              <p className="text-gray-300 font-semibold">Instant Access</p>
+              <p className="text-gray-400 text-sm mt-1">Retrieve your projects instantly from any device with your credentials.</p>
             </div>
           </div>
         </section>
@@ -166,9 +231,21 @@ function About() {
             </p>
           </div>
           <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-5 sm:p-8">
+            <h3 className="text-lg sm:text-xl font-semibold">How are my projects saved?</h3>
+            <p className="text-gray-400 text-sm mt-2">
+              Projects are securely stored in MongoDB with your account. You can access them anytime from your dashboard after logging in.
+            </p>
+          </div>
+          <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-5 sm:p-8">
             <h3 className="text-lg sm:text-xl font-semibold">Can I customize the output?</h3>
             <p className="text-gray-400 text-sm mt-2">
               Yes. Edit the generated HTML, CSS, and JS in the Builder, preview changes live, and export when satisfied.
+            </p>
+          </div>
+          <div className="bg-gray-800/50 border border-gray-700 rounded-2xl p-5 sm:p-8">
+            <h3 className="text-lg sm:text-xl font-semibold">Is my data secure?</h3>
+            <p className="text-gray-400 text-sm mt-2">
+              Absolutely. We use industry-standard encryption, JWT authentication, and secure password hashing to protect your data.
             </p>
           </div>
         </section>

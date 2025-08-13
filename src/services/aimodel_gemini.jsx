@@ -69,8 +69,6 @@ A <footer> with 3 links
 
 Logos and icons
 
-
-
 Final Warning:
 Never use backticks (\`) or code blocks. Output the JSON only, properly escaped, and unwrapped.`,
   };

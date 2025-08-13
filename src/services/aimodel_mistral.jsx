@@ -1,21 +1,20 @@
-import OpenAI from "openai";
-const endpoint = "https://openrouter.ai/api/v1";
-const model = "tngtech/deepseek-r1t2-chimera:free";
+import { Mistral } from '@mistralai/mistralai';
 
-async function main(prompt, context) {
+const token = import.meta.env.VITE_CODESTRAL_GIT_TOKEN;
 
-  console.log('Yugma builder with Deepseek R1-Chimera is running')
+const endpoint = "https://models.github.ai/inference";
+const modelName = "mistral-ai/Codestral-2501";
 
+export async function main(prompt, context) {
 
-  const client = new OpenAI({
-    baseURL: endpoint,
-    apiKey: import.meta.env.VITE_OPENROUTER_API_KEY,
-    dangerouslyAllowBrowser: true 
-  });
+  console.log('Yugma builder with Codestral 2501 is running')
 
-  const response = await client.chat.completions.create({
+  const client = new Mistral({apiKey: token, serverURL: endpoint});
+  
+  const response = await client.chat.complete({
+    model: modelName,
     messages: [
-        { role:"system", content: `You are an expert frontend web developer AI Agent.
+      { role:"system", content: `You are an expert frontend web developer AI Agent.
 
 When given a prompt, generate a complete, modern, and responsive website using semantic HTML5, clean CSS3, and vanilla JavaScript.
 
@@ -64,12 +63,12 @@ Realistic placeholder images using https://picsum.photos, for example:
 
 Final Warning:
 Never use backticks (\`) or code blocks. Output the JSON only, properly escaped, and unwrapped.` },
-        { role:"user", content: `// context:\n${context}\n\n// user prompt:\n${prompt}` }
-      ],
-      temperature: 1,
-      top_p: 1,
-      model: model
-    });
+      { role:"user", content: `// context:\n${context}\n\n// user prompt:\n${prompt}` }
+    ],
+    temperature: 1.0,
+    max_tokens: 1000,
+    top_p: 1.0
+  });
 
   console.log(response.choices[0].message.content);
 
@@ -82,10 +81,4 @@ Never use backticks (\`) or code blocks. Output the JSON only, properly escaped,
     console.error('[ERROR] Raw response:', response.choices[0].message.content);
     return {};
   }
-  
 }
-
-
-
-
-export { main };

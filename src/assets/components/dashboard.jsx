@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
+
+
 const Dashboard = () => {
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,7 +34,7 @@ const Dashboard = () => {
         setUser(userData);
 
         // Fetch generations
-        const generationsResponse = await fetch('http://localhost:5000/api/generations', {
+        const generationsResponse = await fetch(`${process.env.BACKEND_URL}/generations`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`

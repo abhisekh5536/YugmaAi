@@ -340,6 +340,13 @@ Please update the code according to the user's request while maintaining the exi
 const handleSync = async () => {
   setIsSyncing(true);
   try {
+    // first it check the user is logged in or not
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+
     // Get the summary from the last AI message or create one
     const lastAiMessage = messages.filter(msg => msg.sender === 'ai').pop();
     const summary = lastAiMessage ? lastAiMessage.text : 'No summary available';
@@ -360,12 +367,12 @@ const handleSync = async () => {
       originalPrompt  // Use the original prompt
     );
 
-    console.log('Project synced successfully!');
+    console.log('Project Saved to Dashboard successfully!');
     
     // Optional: Add success message to chat
     const successMessage = {
       id: messages.length + 1,
-      text: "Project synced successfully!",
+      text: "Project saved to Dashboard!",
       sender: 'ai'
     };
     setMessages(prev => [...prev, successMessage]);
@@ -375,7 +382,7 @@ const handleSync = async () => {
     // Add error message to chat
     const errorMessage = {
       id: messages.length + 1,
-      text: "Failed to sync project. Please try again.",
+      text: "Failed to save project. Please try again.",
       sender: 'ai'
     };
     setMessages(prev => [...prev, errorMessage]);
@@ -488,7 +495,8 @@ const handleSync = async () => {
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
   </svg>
   <span className="md:inline hidden ml-1">
-    {isSyncing ? 'Syncing...' : 'Sync'}
+    {isSyncing ? 'Saving...' : 'Save'}
+
   </span>
 </button>
             <button 
@@ -604,16 +612,16 @@ const handleSync = async () => {
           </div>
         ) : (
           // Preview Area
-          <div className={`${isFullscreen ? 'fixed inset-0 z-50 bg-white p-0' : 'flex-1 overflow-hidden bg-white p-4'}`}>
+                <div className={`${isFullscreen ? 'fixed inset-0 z-50 bg-white p-0' : 'flex-1 overflow-hidden bg-white p-3 h-full'}`}>
             <div className={`${isFullscreen ? 'h-full w-full' : 'h-full border border-gray-300 rounded overflow-auto'}`}>
               {files.length > 0 ? (
                 <>
                   {isFullscreen && (
                     <button
                       onClick={() => setIsFullscreen(false)}
-                      className="fixed top-4 right-4 z-50 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-red-700 transition duration-200"
+                      className="fixed bottom-4 right-4 z-50 bg-red-600/20 backdrop-blur-sm border-red-500 text-red-500 rounded-full px-2 py-1 rounded-lg shadow-lg  transition duration-200"
                     >
-                      Exit Fullscreen
+                      Exit
                     </button>
                   )}
                   <iframe

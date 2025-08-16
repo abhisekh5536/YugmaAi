@@ -15,7 +15,7 @@ export default function sendGeneration(html, css, js, summary, name, prompt) {
   };
 
 
-  return fetch('http://localhost:5000/api/generations', {
+  return fetch(`${import.meta.env.VITE_BACKEND_URL}/api/generations`, {
     method: 'POST',
     body: JSON.stringify(formData),
     headers: {

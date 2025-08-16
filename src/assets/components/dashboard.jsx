@@ -22,7 +22,7 @@ const Dashboard = () => {
         }
 
         // Fetch user data
-        const userResponse = await fetch(`${process.env.BACKEND_URL}/auth/me`, {
+        const userResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/me`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -34,7 +34,7 @@ const Dashboard = () => {
         setUser(userData);
 
         // Fetch generations
-        const generationsResponse = await fetch(`${process.env.BACKEND_URL}/generations`, {
+        const generationsResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/generations`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -95,7 +95,7 @@ const Dashboard = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/generations/${projectId}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/generations/${projectId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

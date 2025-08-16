@@ -34,7 +34,7 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/auth/register`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

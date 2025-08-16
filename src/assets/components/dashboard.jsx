@@ -22,7 +22,7 @@ const Dashboard = () => {
         }
 
         // Fetch user data
-        const userResponse = await fetch('http://localhost:5000/api/auth/me', {
+        const userResponse = await fetch(`${process.env.BACKEND_URL}/auth/me`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`

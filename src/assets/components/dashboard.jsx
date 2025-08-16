@@ -22,7 +22,7 @@ const Dashboard = () => {
         }
 
         // Fetch user data
-        const userResponse = await fetch(`${process.env.BACKEND_URL}/auth/me`, {
+        const userResponse = await fetch(`${process.env.VITE_BACKEND_URL}/auth/me`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -34,7 +34,7 @@ const Dashboard = () => {
         setUser(userData);
 
         // Fetch generations
-        const generationsResponse = await fetch(`${process.env.BACKEND_URL}/generations`, {
+        const generationsResponse = await fetch(`${process.env.VITE_BACKEND_URL}/generations`, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`

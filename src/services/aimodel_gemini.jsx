@@ -22,7 +22,7 @@ async function main(prompt, context) {
   ];
   const config = {
     thinkingConfig: {
-      thinkingBudget: 0,
+      thinkingBudget: 1000,
     },
     tools,
     systemInstruction: `You are an expert frontend web developer AI Agent.

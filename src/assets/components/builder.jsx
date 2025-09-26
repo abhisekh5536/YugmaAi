@@ -11,7 +11,7 @@ import sendGeneration from '../../services/sendGeneration';
 const Builder = () => {
   // State for chat messages
   const [messages, setMessages] = useState([
-    { id: 1, text: "Jaldi boliye malik kya bnau? kal subh panvel nikalna hai", sender: 'ai' },
+    { id: 1, text: "Hi! i am Yugma Ai Please Write a prompt", sender: 'ai' },
   ]);
   
   // State for new message input

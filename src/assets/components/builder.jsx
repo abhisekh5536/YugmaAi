@@ -429,7 +429,7 @@ const handleSync = async () => {
                 <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
               </div>
-              <span className="ml-2 text-gray-300">Rukiye malik kaam chalu h...</span>
+              <span className="ml-2 text-gray-300">Wait while generating content...</span>
             </div>
           )}
         </div>

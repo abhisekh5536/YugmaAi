@@ -1,7 +1,7 @@
 
 import OpenAI from "openai";
 const endpoint = "https://api.llm7.io/v1";
-const model = "gpt-4.1-nano-2025-04-14";
+const model = "gpt-5-chat";
 
 async function main(prompt) {
   console.log('Generating name...');

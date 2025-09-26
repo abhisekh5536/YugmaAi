@@ -16,7 +16,7 @@ async function main(prompt) {
     const response = await client.chat.completions.create({
       messages: [
         { role: "system", content: `You are a title generator. Generate a title for a website based on the user's prompt.` },
-        { role: "user", content: `Generate a title for a website based on the following prompt: ${prompt}` }
+        { role: "user", content: `Generate a short title for a website between 2 to 5 words based on the following prompt: ${prompt}` }
       ],
       temperature: 1,
       top_p: 1,

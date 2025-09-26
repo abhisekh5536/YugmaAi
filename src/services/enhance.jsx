@@ -1,7 +1,7 @@
 
 import OpenAI from "openai";
 const endpoint = "https://api.llm7.io/v1";
-const model = "gpt-4.1-nano-2025-04-14";
+const model = "gpt-5-chat";
 
 async function main(prompt) {
   console.log('Prompt Enhancer is running');
@@ -18,7 +18,9 @@ async function main(prompt) {
         { role: "system", content: `You are a prompt enhancer for a website generator (frontend).
 Improve the user's prompt to make it more clear, specific, and implementation-ready using standard web technologies (HTML, CSS, JavaScript). Avoid mentioning HTML, CSS, or JavaScript directly. Ensure the result describes the site’s purpose, layout, features, style, and interactivity clearly.
 
-Respond only with the enhanced prompt. No explanations.` },
+Respond only with the enhanced prompt. No explanations.
+keep it concise dont make it too detailed or complex for the llm keep it under 100 words.
+` },
         { role: "user", content: `user prompt: ${prompt}` }
       ],
       temperature: 1,

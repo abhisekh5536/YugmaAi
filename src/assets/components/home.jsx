@@ -42,7 +42,7 @@ const Home = () => {
         {/* Header */}
         <div className="mb-8 sm:mb-10 md:mb-12">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-4 mt-25">
-            Btao Maalik kya bnau?
+            Let's Build Something GOOD!!
           </h1>
           
           <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mt-3 sm:mt-4">
